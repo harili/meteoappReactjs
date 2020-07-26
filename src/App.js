@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const api = {
   key : "608f126c97a1374eebdc3793767f22f8",
-  base : "https://api.openweathermap.org/data/2.5"
+  base : "https://api.openweathermap.org/data/2.5/"
 }
 
 function App() {
 
+  const [query, setQuery] = useState('');
+  const[weather, setWeather] = useState('');
+
+  const search = evt =>{
+if (evt.key === "Enter"){
+
+  fetch(`$(api.base)weather?q=$(query)&units=metric&APPID=$(api.key)`)
+  .then(res => res.json())
+  .then(result => setWeather(result))
+    }
+
+  }
   const dateBuilder = (d) => {
-    let months = ["Janvier", "Février", "Mars", "Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre",
-    "Décembre"];
-    let days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    let months = ["January", "February", "March", "April","May","June","July",
+    "August","September","October","November","December"];
+    let days = ["Sunday", "Monday", "Wednesday", "Thursday", "Friday", "Friday", "Saturday"];
 
     let day = days[d.getDay()];
-    let date = d.getDay();
-    let month = months[d.getMonths()];
+    let date = d.getDate();
+    let month = months[d.getMonth()];
     let year = d.getFullYear();
 
-    return 
+    return `${day} ${date} ${month} ${year}` 
   }
+
   return (
     <div className="app">
       <main>
@@ -27,17 +40,20 @@ function App() {
             type="text"
             className="search-bar"
             placeholder="Search..."
+            onChange={e => setQuery(e.target.value)}
             ></input>
         </div>
-        <div className="location-bar">
-          <div className="location">Bègles, FR</div>
-  <div className="date">{dateBuilder(new date())}</div>
-        </div>
-   
-        
-      </main>
-      
-        
+        <div className="location-box">
+          <div className="location">New York City, US</div>
+          <div className="date">{dateBuilder(new Date())}</div>
+        </div>  
+        <div className="weather-box">
+          <div className="temp">
+              15°C
+          </div>
+          <div className="weather">Sunny</div>
+          </div>    
+      </main>        
     </div>
   );
 }
